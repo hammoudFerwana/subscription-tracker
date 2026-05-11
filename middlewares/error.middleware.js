@@ -1,33 +1,39 @@
+import appError from "../util/appErrs.js";
+
 const errorMiddleware = (err, req, res, next) => {
   try {
-    let error = { ...err };
-    error.message = err.message;
-    console.error("Error in errorMiddleware:", error);
+    let error = err;
 
-    // Handle Mongoose validation errors
+    console.error("Error in errorMiddleware:", err);
+
+    // Default values
+    error.statusCode = error.statusCode || 500;
+    error.status = error.status || "error";
+
+    // Handle Mongoose Validation Error
     if (err.name === "ValidationError") {
-      error.statusCode = 400;
-      error.message = Object.values(err.errors)
+      const message = Object.values(err.errors)
         .map((val) => val.message)
         .join(", ");
+
+      error = new appError(message, 400);
     }
-    // Handle Mongoose bad ObjectId
+
+    // Handle CastError
     if (err.name === "CastError") {
-      error.statusCode = 400;
-      error.message = `Resource not found with id of ${err.value}`;
-      error = new Error(error.message);
+      const message = `Resource not found with id of ${err.value}`;
+      error = new appError(message, 400);
     }
 
-    // Handle Mongoose duplicate key error
+    // Handle Duplicate Key Error
     if (err.code === 11000) {
-      error.statusCode = 400;
-      error.message = "Duplicate field value entered";
-      error = new Error(error.message);
+      const message = "Duplicate field value entered";
+      error = new appError(message, 400);
     }
 
-    res.status(error.statusCode || 500).json({
+    res.status(error.statusCode).json({
       success: false,
-      error: error.message || "Server Error",
+      error: error.message,
     });
   } catch (error) {
     console.error("Error in errorMiddleware:", error);

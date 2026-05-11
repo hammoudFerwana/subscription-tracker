@@ -1,0 +1,15 @@
+uderstand the glopal err middleware and in the vedio go to auth JWT
+
+
+
+
+
+
+
+
+
+
+
+
+
+// operitional errs its by the user so i want to handle them in advance

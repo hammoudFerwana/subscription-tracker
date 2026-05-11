@@ -17,7 +17,16 @@ app.use("api/v1/users", userRouter);
 app.use("api/v1/subscriptions", subscriptionRouters);
 
 app.use(errorMiddleware);
+
+// Handle 404 errors for undefined routes
+app.use((req, res, next) => {
+  res.status(404).json({
+    success: false,
+    error: "Route not found",
+  });
+});
+
 app.listen(PORT, () => {
-  console.log(`app is run in http://localhost:${PORT}}/`);
+  console.log(`app is run in http://localhost:${PORT}/`);
   connectDB();
 });
