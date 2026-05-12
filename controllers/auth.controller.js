@@ -16,11 +16,10 @@ export const signUp = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      next(appError("User already exists", 400));
+      next(new appError("User already exists", 400));
       return;
     }
 
-    // Create a new user
     const newUser = await User.create([{ name, email, password }], { session });
 
     // to not return the password in the response
@@ -44,5 +43,32 @@ export const signUp = async (req, res, next) => {
     next(error);
   }
 };
-export const signIn = asyncHandler(async (req, res, next) => {});
+export const signIn = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new appError("Please provide email and password", 400));
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user) {
+    return next(new appError("Invalid email or password", 401));
+  }
+
+  const isMatch = await user.comparePassword(password);
+
+  if (!isMatch) {
+    return next(new appError("Invalid email or password", 401));
+  }
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+
+  res.status(200).json({
+    success: true,
+    token,
+  });
+});
 export const signOut = asyncHandler(async (req, res, next) => {});
