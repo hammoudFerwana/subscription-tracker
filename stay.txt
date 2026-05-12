@@ -12,4 +12,10 @@ uderstand the glopal err middleware and in the vedio go to auth JWT
 
 
 
+
 // operitional errs its by the user so i want to handle them in advance
+// very importannt note :: 
+in the mongoose middleware (pre  ,post )
+there is two typres
+1- using async function thats cant use next() with it becouse async retuen a promise  
+2- using it without async 
