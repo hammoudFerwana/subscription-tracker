@@ -1,6 +1,6 @@
 import asyncHandler from "../util/asyncHandler.js";
 import mongoose from "mongoose";
-import User from "../models/user.modle.js";
+import User from "../models/user.model.js";
 import appError from "../util/appErrs.js";
 import jwt from "jsonwebtoken";
 import { JWT_EXPIRES_IN } from "../config/env.js";
