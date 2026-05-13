@@ -14,7 +14,7 @@ export const getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
-    return next(new appError("User not found", 404));
+    return next(new appError("User not found here", 404));
   }
 
   res.status(200).json({
