@@ -1,35 +1,38 @@
 import { Router } from "express";
+import { authorize } from "../middlewares/auth.middleware.js";
+import {
+  createSubscription,
+  getUserSubscriptions,
+  getSubscriptionById,
+  updateSubscription,
+  deleteSubscription,
+} from "../controllers/subscription.controller.js";
+import { get } from "mongoose";
 let subscriptionRouter = Router();
 
 subscriptionRouter.get("/", (req, res) => {
   res.json("hello");
 });
 
-subscriptionRouter.get("/:id", (req, res) => {
-  res.json("hello");
-});
+subscriptionRouter.get("/:id", authorize, getSubscriptionById);
 
-subscriptionRouter.post("/", (req, res) => {
-  res.json("hello");
-});
+subscriptionRouter.post("/", authorize, createSubscription);
 
-subscriptionRouter.put("/:id", (req, res) => {
-  res.json("hello");
-});
+subscriptionRouter.put("/:id", authorize, updateSubscription);
 
-subscriptionRouter.delete("/:id", (req, res) => {
-  res.json("hello");
-});
+subscriptionRouter.delete("/:id", authorize, deleteSubscription);
 
-subscriptionRouter.get("/user/:userId", (req, res) => {
-  res.json("hello");
-});
+subscriptionRouter.get("/user/:userId", authorize, getUserSubscriptions);
 
-subscriptionRouter.put("/user/:userId/:subscriptionId/cancel", (req, res) => {
-  res.json("hello");
-});
+subscriptionRouter.put(
+  "/user/:userId/:subscriptionId/cancel",
+  authorize,
+  (req, res) => {
+    res.json("hello");
+  },
+);
 
-subscriptionRouter.get("upcoming-renewals", (req, res) => {
+subscriptionRouter.get("upcoming-renewals", authorize, (req, res) => {
   res.json("hello");
 });
 

@@ -45,6 +45,7 @@ const subscriptionSchema = new moongoose.Schema(
     },
     startDate: {
       type: Date,
+      default: Date.now, // set the default start date to the current date
       required: [true, "the start date is required"],
       validate: {
         validator: function (value) {
@@ -68,13 +69,24 @@ const subscriptionSchema = new moongoose.Schema(
       required: [true, "the user is required"],
       index: true,
     },
+
+    // made a soft delete
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-subscriptionSchema.pre("save", function (next) {
+subscriptionSchema.pre("save", function () {
   if (!this.renewalDate) {
     const renewalIntervals = {
       daily: 1,
@@ -92,9 +104,11 @@ subscriptionSchema.pre("save", function (next) {
   if (this.renewalDate < new Date()) {
     this.status = "expired";
   }
-  next();
 });
 
+subscriptionSchema.pre(/^find/, function () {
+  this.find({ isDeleted: { $ne: true } });
+});
 const Subscription = moongoose.model("Subscription", subscriptionSchema);
 
 export default Subscription;

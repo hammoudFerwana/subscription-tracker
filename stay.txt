@@ -13,3 +13,7 @@ uderstand the glopal err middleware and in the vedio go to auth JWT
 
 
 // operitional errs its by the user so i want to handle them in advance
+// note: in the value of the query like let user = User.find()
+// 1- with the user.save() its run the valedators and also alow to the implement the pre Save middleware
+// 2- if i used the findByIdAndUpdate wont allow to run the valedators and also cant do pre Save middleware
+// 2--- i can run the validators in the findByIdAndUpdate by in hte option {runvalidators:true} 
