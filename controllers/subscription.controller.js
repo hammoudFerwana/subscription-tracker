@@ -1,3 +1,5 @@
+import { SERVER_URL } from "../config/env.js";
+import { workflowClient } from "../config/upstach.js";
 import Subscription from "../models/subscription.modle.js";
 import asyncHandler from "../util/asyncHandler.js";
 
@@ -6,6 +8,21 @@ export const createSubscription = asyncHandler(async (req, res, next) => {
   let subcription = await Subscription.create({
     ...req.body,
     user: req.user._id,
+  });
+
+  // trigger the workflow to send reminders before the renewal date
+  // 1- the url is the endpoint of the workflow route that i created in the routes/Workflow.route.js file and this endpoint
+  // 2- the body is the data that i want to pass to the workflow and this data will be available in the workflow through the context.requestPayload
+  await workflowClient.trigger({
+    url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
+    body: {
+      subscriptionId: subcription._id.toString(),
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // retries is the number of times the workflow will retry to run the function in case of failure and i set it to 0 because i don't want to retry if there is an error in the workflow and i want to handle the error in the workflow itself
+    retries: 0,
   });
 
   res.status(201).json({
