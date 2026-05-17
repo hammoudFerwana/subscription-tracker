@@ -17,3 +17,9 @@ uderstand the glopal err middleware and in the vedio go to auth JWT
 // 1- with the user.save() its run the valedators and also alow to the implement the pre Save middleware
 // 2- if i used the findByIdAndUpdate wont allow to run the valedators and also cant do pre Save middleware
 // 2--- i can run the validators in the findByIdAndUpdate by in hte option {runvalidators:true} 
+
+
+// Upstash Workflow? -> its like the google claender for the Backend
+-> this is cheak when the thing is comming (before few days) not everyday
+// the crown Job -> نستخدم الـ Cron Job في أي حالة تتطلب تنفيذ كود برميجي بناءً على الوقت، وليس بناءً على فعل المستخدم (User Action).
+-> this is for cheak every day like a 12:00AM cheak 
